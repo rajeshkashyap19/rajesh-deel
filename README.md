@@ -16,4 +16,4 @@ The system was built with simplicity, reliability, and efficiency in mind, using
 │   └── schema.yml
 ├── alert_balance_change.py
 ├── README.md
-└── dbt_project.yml```
+└── dbt_project.yml

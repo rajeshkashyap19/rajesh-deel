@@ -2,8 +2,7 @@ This project implements a simple data system to alert an operational team when a
 The system was built with simplicity, reliability, and efficiency in mind, using dbt for modeling and a lightweight Python script for alerts.
 
 **Project Structure is below**
-
-deel_data_alerts/
+```deel_data_alerts/
 ├── data/
 │   ├── Organizations.csv
 │   └── Invoices.csv
@@ -17,4 +16,4 @@ deel_data_alerts/
 │   └── schema.yml
 ├── alert_balance_change.py
 ├── README.md
-└── dbt_project.yml
+└── dbt_project.yml```

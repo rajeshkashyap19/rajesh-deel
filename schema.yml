@@ -50,15 +50,11 @@ models:
      - name: fct_daily_balances
        description: "Fact table capturing daily balance snapshots"
        columns:
-      - name: balance_date
+      - name: date
         description: "Date of the balance snapshot"
         tests:
           - not_null
-      - name: organization_id
-        description: "Foreign key to dim_organizations"
-        tests:
-          - not_null
-      - name: daily_balance
+      - name: cumulative_balance
         description: "Balance amount for the day"
         tests:
           - not_null

@@ -10,8 +10,9 @@ SELECT
     CAST(first_payment_date as DATE) AS first_payment_date,
     CAST(last_payment_date as DATE) AS last_payment_date,
     CAST(legal_entity_country_code AS STRING) AS legal_entity_country_code,
+    COUNT_TOTAL_CONTRACTS_ACTIVE,
     CAST(created_date AS DATETIME) AS created_date
-FROM {{ source('your_source', 'organizations') }}
+FROM orgs
 )
 
 SELECT * FROM cleaned

@@ -1,10 +1,48 @@
 version: 2
-sources:
-  - name: raw
-    tables:
-      - name: organizations
-        external:
-          location: 'path/to/Organizations.csv'
-      - name: invoices
-        external:
-          location: 'path/to/Invoices.csv'
+
+models:
+  - name: dim_organizations
+    description: "Dimension table for organizations with enriched fields"
+    columns:
+      - name: organization_id
+        description: "Unique identifier for each organization"
+        tests:
+          - not_null
+          - unique
+      - name: organization_name
+        description: "Name of the organization"
+        tests:
+          - not_null
+      - name: legal_entity_country_code
+        description: "Raw country code, may contain scientific notation"
+      - name: legal_entity_country_code_clean
+        description: "Cleaned legal_entity_country_code, converted to string or bigint"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [regex: '^\d+$']
+              quote: false
+
+  - name: fct_daily_balances
+    description: "Fact table at date/organization_id granularity showing financial balances"
+    columns:
+      - name: organization_id
+        description: "Unique identifier for each organization"
+        tests:
+          - not_null
+      - name: date
+        description: "Date of the balance"
+        tests:
+          - not_null
+      - name: balance
+        description: "Daily balance (numeric)"
+        tests:
+          - not_null
+      - name: balance_long_int
+        description: "Daily balance converted to BIGINT to remove scientific notation"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [regex: '^-?\d+$']  # Allow optional minus sign for negatives
+              quote: false
+

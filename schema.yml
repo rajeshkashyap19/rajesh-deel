@@ -38,9 +38,18 @@ models:
           - accepted_values:
               values: ['paid', 'pending', 'skipped', 'open', 'cancelled', 'credited', 'failed', 'refunded', 'processing']  
 
-  - name: fct_daily_balances
-    description: "Fact table capturing daily balance snapshots"
-    columns:
+     - name: dim_organizations
+       description: "data with organization level data with invoice information"
+       columns:
+      - name: organization_id
+        description: "Primary key for dim organizations"
+        tests:
+          - unique
+          - not_null
+
+     - name: fct_daily_balances
+       description: "Fact table capturing daily balance snapshots"
+       columns:
       - name: balance_date
         description: "Date of the balance snapshot"
         tests:

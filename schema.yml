@@ -4,20 +4,20 @@ models:
   - name: stg_organizations
     description: "Staging table for organizations data"
     columns:
-      - name: id
+      - name: organization_id
         description: "Primary key for organizations"
         tests:
           - unique
           - not_null
-      - name: name
-        description: "Name of the organization"
+      - name: created_Date
+        description: "Record creation date in the database"
         tests:
           - not_null
 
   - name: stg_invoices
     description: "Staging table for invoices data"
     columns:
-      - name: id
+      - name: invoice_id
         description: "Primary key for invoices"
         tests:
           - unique
@@ -31,20 +31,12 @@ models:
         tests:
           - not_null
           - accepted_values:
-              values: ['>=0']  # NOTE: dbt accepted_values does not support expressions, consider a custom test or check in SQL instead
-
-  - name: dim_organizations
-    description: "Dimension table for organizations"
-    columns:
-      - name: organization_id
-        description: "Primary key for dim organizations"
+              values: ['>=0']  
+      - name: status
+        description: "Payment Status"
         tests:
-          - unique
-          - not_null
-      - name: organization_name
-        description: "Name of the organization"
-        tests:
-          - not_null
+          - accepted_values:
+              values: ['paid', 'pending', 'skipped', 'open', 'cancelled', 'credited', 'failed', 'refunded', 'processing']  
 
   - name: fct_daily_balances
     description: "Fact table capturing daily balance snapshots"

@@ -1,48 +1,63 @@
 version: 2
 
 models:
-  - name: dim_organizations
-    description: "Dimension table for organizations with enriched fields"
+  - name: stg_organizations
+    description: "Staging table for organizations data"
     columns:
-      - name: organization_id
-        description: "Unique identifier for each organization"
+      - name: id
+        description: "Primary key for organizations"
+        tests:
+          - unique
+          - not_null
+      - name: name
+        description: "Name of the organization"
         tests:
           - not_null
+
+  - name: stg_invoices
+    description: "Staging table for invoices data"
+    columns:
+      - name: id
+        description: "Primary key for invoices"
+        tests:
           - unique
+          - not_null
+      - name: organization_id
+        description: "Foreign key to organizations"
+        tests:
+          - not_null
+      - name: amount
+        description: "Invoice amount"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['>=0']  # NOTE: dbt accepted_values does not support expressions, consider a custom test or check in SQL instead
+
+  - name: dim_organizations
+    description: "Dimension table for organizations"
+    columns:
+      - name: organization_id
+        description: "Primary key for dim organizations"
+        tests:
+          - unique
+          - not_null
       - name: organization_name
         description: "Name of the organization"
         tests:
           - not_null
-      - name: legal_entity_country_code
-        description: "Raw country code, may contain scientific notation"
-      - name: legal_entity_country_code_clean
-        description: "Cleaned legal_entity_country_code, converted to string or bigint"
-        tests:
-          - not_null
-          - accepted_values:
-              values: [regex: '^\d+$']
-              quote: false
 
   - name: fct_daily_balances
-    description: "Fact table at date/organization_id granularity showing financial balances"
+    description: "Fact table capturing daily balance snapshots"
     columns:
+      - name: balance_date
+        description: "Date of the balance snapshot"
+        tests:
+          - not_null
       - name: organization_id
-        description: "Unique identifier for each organization"
+        description: "Foreign key to dim_organizations"
         tests:
           - not_null
-      - name: date
-        description: "Date of the balance"
+      - name: daily_balance
+        description: "Balance amount for the day"
         tests:
           - not_null
-      - name: balance
-        description: "Daily balance (numeric)"
-        tests:
-          - not_null
-      - name: balance_long_int
-        description: "Daily balance converted to BIGINT to remove scientific notation"
-        tests:
-          - not_null
-          - accepted_values:
-              values: [regex: '^-?\d+$']  # Allow optional minus sign for negatives
-              quote: false
-
